@@ -1,0 +1,8 @@
+Binôme : Quentin Warnant & Antoine Durigneux
+Date : 08/12/14
+
+Notre bibliothèque de gestion de disque dur est maintenant complète.
+En effet, nous disposons de trois séries de programmes principaux :
+- mvol est l'homologue de la commande linux fdisk, elle permet de créer, supprimer et lister des partitions sur un disque dur virtuel
+- mutils est un programme utilitaire destiné à débugger le disque (blocs, ...), à créer et gérer un nouveau file system sur une partition
+- **file permettent de créer des fichiers sur un file system d'une partition
