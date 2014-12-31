@@ -10,8 +10,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
+#include <assert.h>
 #include "ifile.h"
 #include "mount.h"
+#include "tools.h"
+#include "bloc.h"
 
 static void
 nfile()
@@ -22,16 +25,20 @@ nfile()
     int c;
     
     inumber = create_ifile(IT_FILE);
-    ffatal(inumber, "erreur creation fichier");
+    ffatal(inumber, "erreur creation fichier\n");
     printf("%u\n", inumber);
 
     status = open_ifile(&fd, inumber);
-    ffatal(!status, "erreur ouverture fichier %d", inumber);
+    ffatal(!status, "erreur ouverture fichier %d\n", inumber);
     
     while((c=getchar()) != EOF)
-        writec_ifile(&fd, c);
+        if(writec_ifile(&fd, c) == RETURN_FAILURE) {
+            ffatal(!status, "erreur ecriture caractere\n");
+            assert(current_super.super_magic == SUPER_MAGIC);
+        }
 
     close_ifile(&fd);
+    assert(current_super.super_magic == SUPER_MAGIC);
 }
 
 static void
@@ -49,8 +56,11 @@ main (int argc, char *argv[])
         usage(argv[0]);
 
     mount();
+    assert(current_super.super_magic == SUPER_MAGIC);
+
     nfile();
     umount();
-    
+    assert(current_super.super_magic == SUPER_MAGIC);
+
     exit(EXIT_SUCCESS);         
 }
