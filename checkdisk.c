@@ -68,7 +68,7 @@ int main(int argc, char** argv) {
 
 	/* Fill the partition */
 	if (strcmp(processtype, "debug_fill") == 0) {
-		printf("Filling the current partition ...\n");
+		printf("Filling the current partition\n");
 		if (!load_super(CURRENT_VOL)) {
 			fprintf(stderr, "No file system on the chosen partition\n");
 			return EXIT_FAILURE;
@@ -82,6 +82,7 @@ int main(int argc, char** argv) {
 				fflush(stdout);
 			}
 		} while (b != 0);
+		printf("\n");
 		printf("Number of allocated blocs : %d\n", count);
 		return EXIT_SUCCESS;
 	}
