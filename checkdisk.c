@@ -17,20 +17,11 @@ static void usage() {
 int main(int argc, char** argv) {
 	/* Variable declaration */
 	unsigned char* buffer;
-	int opterr, optind, index, c, vSize = HDA_SECTORSIZE - 1, vCylinder = -1,
-			vSector = -1, free_size = 0, count = 0, i, j;
-	char* optopt;
-	struct vol_s newVol;
-
-	/* Disk and partition initialization */
-	init_master();
-	load_mbr();
-	init_volume();
+	int free_size = 0, count = 0, i, j;
 
 	/* Variable initialization */
 	srand(time(NULL));
 	buffer = (unsigned char*) malloc(HDA_SECTORSIZE * sizeof(unsigned char));
-	opterr = 0;
 
 	/* Check the usage of the main program */
 	cmdname = argv[0];
@@ -39,6 +30,26 @@ int main(int argc, char** argv) {
 		usage();
 		return EXIT_FAILURE;
 	}
+
+	/* Only disk creation */
+	if(strcmp(processtype, "mkhd") == 0) {
+
+		/* Delete the old disks */
+		remove("vdiskA.bin");
+		remove("vdiskB.bin");
+
+		/* New disk initialization */
+		init_master();
+
+		printf("The disks have been successfully created.\n");
+		return EXIT_SUCCESS;
+	}
+
+	/* Disk initialization */
+	init_master();
+	/* Load master boot record and partition information */
+	load_mbr();
+	init_volume();
 
 	/* Get the status of the disk (free space) */
 	if (strcmp(processtype, "status") == 0) {
@@ -102,19 +113,10 @@ int main(int argc, char** argv) {
 	/* Make a new filesystem */
 	if (strcmp(processtype, "mknfs") == 0) {
 		init_super(CURRENT_VOL);
+		printf("A new file system has been successfully installed on the current drive.\n");
 		return EXIT_SUCCESS;
 	}
 
-	if (strcmp(processtype, "dfs") == 0) {
-		for (index = 0; index < mbr.mbr_n_vol; index++) {
-			struct super_s cur_super;
-			read_bloc_n(index, SUPER, sizeof(cur_super),
-					(unsigned char*) &cur_super);
-			printf("%s\t", cur_super.super_name);
-			printf("%d\n", cur_super.super_nb_free);
-		}
-		return EXIT_SUCCESS;
-	}
 
 	/* Process to format the entire disk	 */
 	if (strcmp(processtype, "frmt") == 0) {
