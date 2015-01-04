@@ -94,7 +94,8 @@ int main(int argc, char** argv) {
 		}
 
 		/* Random free of the partition blocs */
-		int it = 255 - current_super.super_nb_free;
+
+		int it = mbr.mbr_vol[CURRENT_VOL].vol_n_sector;
 		int n;
 
 		count = 0;
