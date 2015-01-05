@@ -18,6 +18,8 @@ typedef enum { TRUE  = 1, FALSE = 0 } bool_t;
 #  error "RETURN_FAILURE must be negative"
 #endif
 
+/* Define the debug mode */
+/*#define DEBUG*/
 
 /* will not return but exit.
    return an int in order you can return fatal() in a non void function. */   
