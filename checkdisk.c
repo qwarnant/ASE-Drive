@@ -89,19 +89,28 @@ int main(int argc, char** argv) {
 
 	/* Random free of the partition */
 	if (strcmp(processtype, "debug_free") == 0) {
+		unsigned size = mbr.mbr_vol[CURRENT_VOL].vol_n_sector - 1;
+		unsigned begin = mbr.mbr_vol[CURRENT_VOL].vol_first_sector;
+		int it = begin + size;
+		int n;
+		count = 0;
+
 		if (!load_super(CURRENT_VOL)) {
 			fprintf(stderr, "No file system on the chosen partition\n");
+			return EXIT_FAILURE;
+		}
+
+		/* Check if the partition is empty */
+		if(current_super.super_nb_free == size) {
+			fprintf(stderr, "No bloc to free, the current partition is empty.\n");
+			return EXIT_FAILURE;
 		}
 
 		/* Random free of the partition blocs */
-
-		int it = mbr.mbr_vol[CURRENT_VOL].vol_n_sector;
-		int n;
-
-		count = 0;
-
-		for (n = 0; n < it / 10; n++) {
+		for (n = begin; n < it / 10; n++) {
 			int random = rand() % it;
+			if(random == 0) continue;
+
 			free_bloc(random);
 			printf("%d\n", random);
 
@@ -115,7 +124,7 @@ int main(int argc, char** argv) {
 	/* Make a new filesystem */
 	if (strcmp(processtype, "mknfs") == 0) {
 		init_super(CURRENT_VOL);
-		printf("A new file system has been successfully installed on the current drive.\n");
+		printf("A new file system has been successfully installed on the current partition N°%d.\n", CURRENT_VOL);
 		return EXIT_SUCCESS;
 	}
 

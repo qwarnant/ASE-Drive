@@ -11,6 +11,6 @@
 #ifndef _CONFIG_H_
 #define _CONFIG_H_
 
-#define DFT_HW_CONFIG "/home/qwarnant/workspace/ASE-TP07/hardware.ini"
+#define DFT_HW_CONFIG "./hardware.ini"
 
 #endif
